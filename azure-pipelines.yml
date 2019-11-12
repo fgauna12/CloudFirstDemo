@@ -40,7 +40,12 @@ stages:
   depends_on: build
   displayName: Publish
   jobs:
-    - download: current
-      artifact: drop
-    - script: |
-        echo 'pretend publishing'
+    - job: job_publish
+      displayName: Publish
+      pool:
+        vmImage: 'ubuntu-latest'
+      steps:
+      - download: current
+        artifact: drop
+      - script: |
+          echo 'pretend publishing'
