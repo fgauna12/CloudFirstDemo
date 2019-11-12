@@ -39,7 +39,6 @@ stages:
           ArtifactName: 'drop'
           publishLocation: 'Container'
 - stage: publish
-  dependsOn:: build
   displayName: Publish
   variables:
     - name: Environment
