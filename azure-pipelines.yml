@@ -6,32 +6,33 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
   buildConfiguration: 'Release'
 
-steps:
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
- 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: true 
-    arguments: -o $(Build.ArtifactStagingDirectory)/api
-
-- script: |
-    sudo npm install -g @cloudflare/wrangler
-
-- script: |
-    wrangler -h
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+stages:
+- stage: build
+  displayName: Build
+  jobs:
+    - job: job_build
+      displayName: Build
+      pool:
+        vmImage: 'ubuntu-latest'
+      steps: 
+      - task: DotNetCoreCLI@2
+          inputs:
+          command: 'build'
+          projects: '**/*.csproj'
+      - task: DotNetCoreCLI@2
+          inputs:
+          command: 'publish'
+          publishWebProjects: true 
+          arguments: -o $(Build.ArtifactStagingDirectory)/api
+      - script: |
+          sudo npm install -g @cloudflare/wrangler
+      - script: |
+          wrangler -h
+      - task: PublishBuildArtifacts@1
+          inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
