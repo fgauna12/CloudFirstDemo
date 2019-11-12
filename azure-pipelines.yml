@@ -8,6 +8,8 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
+  AzureSubscriptionConnectionName: 'Nebbia - Partner Network(1979771a-9163-4750-8947-e6dbe596a8d7)'
+  AzureSubscriptionName: '1979771a-9163-4750-8947-e6dbe596a8d7'
 
 stages:
 - stage: build
@@ -37,8 +39,14 @@ stages:
           ArtifactName: 'drop'
           publishLocation: 'Container'
 - stage: publish
-  depends_on: build
   displayName: Publish
+  variables:
+    - name: Environment
+      value: prod
+    - name: ResourceGroupName
+      value: rg-sampleapp-$(Environment)-001
+    - name: WebAppName
+      value: azapp-sampleapi-$(Environment)
   jobs:
     - job: job_publish
       displayName: Publish
@@ -49,3 +57,22 @@ stages:
         artifact: drop
       - script: |
           echo 'pretend publishing'
+      - task: AzureResourceManagerTemplateDeployment@3
+        inputs:
+          deploymentScope: 'Resource Group'
+          ConnectedServiceName: $(AzureSubscriptionConnectionName)
+          subscriptionName: $(AzureSubscriptionName)
+          action: 'Create Or Update Resource Group'
+          resourceGroupName: $(ResourceGroupName)
+          location: 'East US'
+          templateLocation: 'Linked artifact'
+          csmFile: './arm/arm.json'
+          overrideParameters: '-webAppName $(WebAppName)'
+          deploymentMode: 'Incremental'
+      - task: AzureWebApp@1
+        inputs:
+          azureSubscription: $(AzureSubscriptionConnectionName)
+          appType: 'webApp'
+          appName: $(WebAppName)
+          package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+          deploymentMethod: 'auto'
