@@ -45,9 +45,9 @@ stages:
     - name: Environment
       value: prod
     - name: ResourceGroupName
-      value: rg-sampleapi-$(Environment)-001
+      value: rg-sampleapp-$(Environment)-001
     - name: WebAppName
-      value: webapp-sampleapi-$(Environment)
+      value: azapp-sampleapi-$(Environment)
   jobs:
     - job: job_publish
       displayName: Publish
