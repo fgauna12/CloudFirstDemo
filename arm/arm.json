@@ -67,7 +67,7 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlanName'))]",
-                "[resourceId('Microsoft.Web/components', variables('aiName'))]"
+                "[resourceId('Microsoft.Insights/components', variables('aiName'))]"
             ],
             "resources": [
                 {
@@ -76,7 +76,7 @@
                     "name": "appSettings",
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/Sites/', variables('webAppPortalName'))]",
-                        "[resourceId('Microsoft.Web/components', variables('aiName'))]"
+                        "[resourceId('Microsoft.Insights/components', variables('aiName'))]"
                     ],
                     "properties": {
                         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(variables('aiName')).InstrumentationKey]"
