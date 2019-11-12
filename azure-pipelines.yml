@@ -24,7 +24,7 @@ steps:
     publishWebProjects: true 
 
 - script: |
-    npm install -g @cloudflare/wrangler
+    sudo npm install -g @cloudflare/wrangler
 
 - script: |
     wrangler -h
