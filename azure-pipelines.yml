@@ -69,3 +69,10 @@ stages:
           csmFile: './arm/arm.json'
           overrideParameters: '-webAppName $(WebAppName)'
           deploymentMode: 'Incremental'
+      - task: AzureWebApp@1
+        inputs:
+          azureSubscription: $(AzureSubscriptionConnectionName)
+          appType: 'webApp'
+          appName: $(WebAppName)
+          package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+          deploymentMethod: 'auto'
