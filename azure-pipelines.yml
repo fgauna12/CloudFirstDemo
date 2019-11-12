@@ -29,10 +29,6 @@ stages:
           command: 'publish'
           publishWebProjects: true 
           arguments: -o $(Build.ArtifactStagingDirectory)/api
-      - script: |
-          sudo npm install -g @cloudflare/wrangler
-      - script: |
-          wrangler -h
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -47,9 +43,10 @@ stages:
       value: rg-sampleapp-$(Environment)-001
     - name: WebAppName
       value: azapp-sampleapi-$(Environment)
+    - group: prod-cloudflare-gaunacode
   jobs:
-    - job: job_publish
-      displayName: Publish
+    - job: job_publish_api
+      displayName: Publish API
       pool:
         vmImage: 'ubuntu-latest'
       steps:
@@ -74,5 +71,18 @@ stages:
           azureSubscription: $(AzureSubscriptionConnectionName)
           appType: 'webApp'
           appName: $(WebAppName)
-          package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+          package: '$(Pipeline.Workspace)/drop/api/**/*.zip'
           deploymentMethod: 'auto'
+    - job: job_publish_worker
+      displayName: Publish Worker
+      pool: 
+        vmImage: 'ubuntu-latest'
+      steps: 
+        - script: |
+            sudo npm install -g @cloudflare/wrangler
+        - script: |
+            wrangler publish
+          workingDirectory: $(Build.SourcesDirectory)/src/cloud-worker
+          env:
+            CF_API_KEY: $(GlobalAPIKey)
+            CF_EMAIL: $(Email)
