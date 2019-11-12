@@ -37,7 +37,7 @@ stages:
           ArtifactName: 'drop'
           publishLocation: 'Container'
 - stage: publish
-  depends_on: build
+  dependsOn:: build
   displayName: Publish
   jobs:
     - job: job_publish
