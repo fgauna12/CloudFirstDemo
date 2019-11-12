@@ -12,7 +12,7 @@ async function handleRequest(event) {
   let downstreamRequest = new Request(cacheUrl, request)
   let cache = caches.default
   // Get this request from this zone's cache
-  let response = await cache.match(cacheUrl)
+  let response = await cache.match(request.url)
   if (!response) {
     //if not in cache, grab it from the origin
     response = await fetch(downstreamRequest)
@@ -20,10 +20,10 @@ async function handleRequest(event) {
     response = new Response(response.body, response)
     // Cache API respects Cache-Control headers, so by setting max-age to 10
     // the response will only live in cache for max of 10 seconds
-    response.headers.append('Cache-Control', 'max-age=60')
+    response.headers.append('Cache-Control', 'max-age=120')
     // store the fetched response as cacheKey
     // use waitUntil so computational expensive tasks don't delay the response
-    event.waitUntil(cache.put(cacheUrl, response.clone()))
+    event.waitUntil(cache.put(request.url, response.clone()))
   }
   return response
 }
