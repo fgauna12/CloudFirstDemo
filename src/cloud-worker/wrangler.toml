@@ -1,6 +1,6 @@
 name = "cloud-worker"
 type = "javascript"
 account_id = "af6a60ddf608a89175f12d0d889896ce"
-workers_dev = true
-route = ""
+workers_dev = false
+route = "https://gaunacode.com/worker"
 zone_id = "31ae1b3a28345cfe16902e6f08d4e918"
