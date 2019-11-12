@@ -83,3 +83,6 @@ stages:
         - script: |
             wrangler publish
           workingDirectory: $(Build.SourcesDirectory)/src/cloud-worker
+          env:
+            CF_API_KEY: $(GlobalAPIKey)
+            CF_EMAIL: $(Email)
