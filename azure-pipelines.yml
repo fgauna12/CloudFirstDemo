@@ -36,3 +36,11 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'drop'
           publishLocation: 'Container'
+- stage: publish
+  depends_on: build
+  displayName: Publish
+  jobs:
+    - download: current
+      artifact: drop
+    - script: |
+        echo 'pretend publishing'
