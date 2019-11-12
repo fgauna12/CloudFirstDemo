@@ -22,3 +22,9 @@ steps:
   inputs:
     command: 'publish'
     publishWebProjects: true 
+
+- script: |
+    npm install -g @cloudflare/wrangler
+
+- script: |
+    wrangler -h
