@@ -29,10 +29,6 @@ stages:
           command: 'publish'
           publishWebProjects: true 
           arguments: -o $(Build.ArtifactStagingDirectory)/api
-      - script: |
-          sudo npm install -g @cloudflare/wrangler
-      - script: |
-          wrangler -h
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -48,8 +44,8 @@ stages:
     - name: WebAppName
       value: azapp-sampleapi-$(Environment)
   jobs:
-    - job: job_publish
-      displayName: Publish
+    - job: job_publish_api
+      displayName: Publish API
       pool:
         vmImage: 'ubuntu-latest'
       steps:
@@ -76,3 +72,13 @@ stages:
           appName: $(WebAppName)
           package: '$(Pipeline.Workspace)/drop/api/**/*.zip'
           deploymentMethod: 'auto'
+    - job: job_publish_worker
+      displayName: Publish Worker
+      pool: 
+        vmImage: 'ubuntu-latest'
+      steps: 
+        - script: |
+            sudo npm install -g @cloudflare/wrangler
+        - script: |
+            wrangler publish
+          workingDirectory: $(Build.SourcesDirectory)/src/cloud-worker
