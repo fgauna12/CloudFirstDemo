@@ -13,7 +13,6 @@ async function handleRequest(event) {
   let cacheUrl = new URL(backendUrl)
   let downstreamRequest = new Request(cacheUrl, request)
   let cache = caches.default
-  console.log('backend url', backendUrl);
   // Get this request from this zone's cache
   let response = await cache.match(backendUrl)
   if (!response) {
@@ -24,7 +23,7 @@ async function handleRequest(event) {
     response.headers.delete('Cache-Control');
     response.headers.delete('Server');
     response.headers.delete('X-Powered-By');
-    response.headers.append('Cache-Control', 'max-age=120');
+    response.headers.set('Cache-Control', 'max-age=120');
     // Cache API respects Cache-Control headers, so by setting max-age to 120
     // the response will only live in cache for max of 120 seconds
     //response.headers.append('Cache-Control', 'max-age=120')
