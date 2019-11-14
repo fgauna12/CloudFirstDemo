@@ -21,12 +21,10 @@ async function handleRequest(event) {
     response = await fetch(downstreamRequest)
     // must use Response constructor to inherit all of response's fields
     response = new Response(response.body, response)
-    const newHeaders = new Headers(response.headers)
-    newHeaders.delete('Cache-Control');
-    newHeaders.delete('Server');
-    newHeaders.delete('X-Powered-By');
-    newHeaders.append('Cache-Control', 'max-age=120');
-    response.headers = newHeaders;
+    response.headers.delete('Cache-Control');
+    response.headers.delete('Server');
+    response.headers.delete('X-Powered-By');
+    response.headers.append('Cache-Control', 'max-age=120');
     // Cache API respects Cache-Control headers, so by setting max-age to 120
     // the response will only live in cache for max of 120 seconds
     //response.headers.append('Cache-Control', 'max-age=120')
